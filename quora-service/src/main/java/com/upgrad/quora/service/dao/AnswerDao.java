@@ -14,13 +14,13 @@ public class AnswerDao {
     EntityManager entityManager;
 
     //persistence entity for creating Answer
-    public Answer createAnswer(Answer answer) {
+    public static Answer createAnswer(Answer answer) {
         entityManager.persist(answer);
         return answer;
     }
 
     //persistence entity to get answers for Uuid
-    public Answer getAnswerForUuId(String answerUuId) {
+    public static Answer getAnswerForUuId(String answerUuId) {
         try {
             return entityManager
                     .createNamedQuery("getAnswerForUuId", Answer.class)
@@ -31,17 +31,17 @@ public class AnswerDao {
         }
     }
     //persistence entity to edit answer
-    public Answer editAnswer(Answer answer) {
+    public static Answer editAnswer(Answer answer) {
         entityManager.persist(answer);
         return answer;
     }
     //persistence entity to delete answer
-    public void deleteAnswer(Answer answer) {
+    public static void deleteAnswer(Answer answer) {
         entityManager.remove(answer);
     }
 
     //persistence entity to get answer for question
-    public List<Answer> getAnswersForQuestion(String questionUuId) {
+    public static List<Answer> getAnswersForQuestion(String questionUuId) {
         try {
             return entityManager.createNamedQuery("getAnswersForQuestion", Answer.class)
                     .setParameter("uuid", questionUuId)
