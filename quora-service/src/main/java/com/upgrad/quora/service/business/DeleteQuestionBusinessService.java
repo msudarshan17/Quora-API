@@ -2,7 +2,7 @@ package com.upgrad.quora.service.business;
 
 import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.dao.UserDao;
-import com.upgrad.quora.service.entity.UserAuthTokenEntity;
+import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,8 @@ public class DeleteQuestionBusinessService {
     private QuestionDao questionDao;
 
     /**
-     * @param  questionId the first {@code String} id of the question to be deleted
-     * @param  authorization the second {@code String} to check if the access is available.
+     * @param questionId    the first {@code String} id of the question to be deleted
+     * @param authorization the second {@code String} to check if the access is available.
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public void userQuestionDelete(final String questionId, final String authorization) throws InvalidQuestionException, AuthorizationFailedException {

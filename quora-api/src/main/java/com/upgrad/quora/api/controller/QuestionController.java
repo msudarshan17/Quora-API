@@ -42,8 +42,8 @@ public class QuestionController {
 
 
     /**
-     * @param  questionRequest the first {@code QuestionRequest} to create a particular question.
-     * @param  authorization the second {@code String} to check if the access is available.
+     * @param questionRequest the first {@code QuestionRequest} to create a particular question.
+     * @param authorization   the second {@code String} to check if the access is available.
      * @return ResponseEntity is returned with Status CREATED.
      */
     @RequestMapping(method = RequestMethod.POST, path = "/question/create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -69,7 +69,7 @@ public class QuestionController {
     }
 
     /**
-     * @param  authorization the first {@code String} to check if the access is available.
+     * @param authorization the first {@code String} to check if the access is available.
      * @return ResponseEntity is returned with Status OK.
      */
     @RequestMapping(method = RequestMethod.GET, path = "/question/all", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -100,11 +100,11 @@ public class QuestionController {
     }
 
     /**
-     * @param  userId the first {@code String} to get all question by particular user.
-     * @param  authorization the second {@code String} to check if the access is available.
+     * @param userId        the first {@code String} to get all question by particular user.
+     * @param authorization the second {@code String} to check if the access is available.
      * @return ResponseEntity is returned with Status FOUND.
      */
-    @RequestMapping(method = RequestMethod.GET, path ="/question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.GET, path = "/question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionsByUser(@PathVariable("userId") final String userId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException {
         // Logic to handle Bearer <accesstoken>
         // User can give only Access token or Bearer <accesstoken> as input.
@@ -132,9 +132,9 @@ public class QuestionController {
     }
 
     /**
-     * @param  questionEditRequest the first {@code QuestionEditRequest} content to edit a particular question
-     * @param  questionId the second {@code String} to edit a particular question
-     * @param  authorization the third {@code String} to check if the access is available.
+     * @param questionEditRequest the first {@code QuestionEditRequest} content to edit a particular question
+     * @param questionId          the second {@code String} to edit a particular question
+     * @param authorization       the third {@code String} to check if the access is available.
      * @return ResponseEntity is returned with Status OK.
      */
     @RequestMapping(method = RequestMethod.PUT, path = "/question/edit/{questionId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -160,8 +160,8 @@ public class QuestionController {
     }
 
     /**
-     * @param  questionId the first {@code String} to delete a particular question.
-     * @param  authorization the second {@code String} to check if the access is available.
+     * @param questionId    the first {@code String} to delete a particular question.
+     * @param authorization the second {@code String} to check if the access is available.
      * @return ResponseEntity is returned with Status OK.
      */
     @RequestMapping(method = RequestMethod.DELETE, path = "/question/delete/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

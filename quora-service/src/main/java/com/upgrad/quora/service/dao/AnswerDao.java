@@ -2,6 +2,7 @@ package com.upgrad.quora.service.dao;
 
 import com.upgrad.quora.service.entity.Answer;
 import org.springframework.stereotype.Repository;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -14,13 +15,13 @@ public class AnswerDao {
     EntityManager entityManager;
 
     //persistence entity for creating Answer
-    public static Answer createAnswer(Answer answer) {
+    public Answer createAnswer(Answer answer) {
         entityManager.persist(answer);
         return answer;
     }
 
     //persistence entity to get answers for Uuid
-    public static Answer getAnswerForUuId(String answerUuId) {
+    public Answer getAnswerForUuId(String answerUuId) {
         try {
             return entityManager
                     .createNamedQuery("getAnswerForUuId", Answer.class)
@@ -30,18 +31,20 @@ public class AnswerDao {
             return null;
         }
     }
+
     //persistence entity to edit answer
-    public static Answer editAnswer(Answer answer) {
+    public Answer editAnswer(Answer answer) {
         entityManager.persist(answer);
         return answer;
     }
+
     //persistence entity to delete answer
-    public static void deleteAnswer(Answer answer) {
+    public void deleteAnswer(Answer answer) {
         entityManager.remove(answer);
     }
 
     //persistence entity to get answer for question
-    public static List<Answer> getAnswersForQuestion(String questionUuId) {
+    public List<Answer> getAnswersForQuestion(String questionUuId) {
         try {
             return entityManager.createNamedQuery("getAnswersForQuestion", Answer.class)
                     .setParameter("uuid", questionUuId)

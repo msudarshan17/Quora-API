@@ -44,20 +44,21 @@ public class UserDao {
         return userAuthEntity;
     }
 
-    public UserEntity getUser(String userUuid){
+    //Function to get the complete user details based on UUID
+    public UserEntity getUser(String userUuid) {
         try {
             return entityManager.createNamedQuery("userByUuid", UserEntity.class).setParameter("uuid", userUuid)
                     .getSingleResult();
-        }catch(Exception nre){
+        } catch (Exception nre) {
             return null;
         }
     }
 
-    public UserAuthEntity getAuthByAccessToken(String accessToken){
+    public UserAuthEntity getAuthByAccessToken(String accessToken) {
         try {
             return entityManager.createNamedQuery("authByAccessToken", UserAuthEntity.class).setParameter("accessToken", accessToken)
                     .getSingleResult();
-        }catch(Exception nre){
+        } catch (Exception nre) {
             return null;
         }
     }
@@ -67,7 +68,7 @@ public class UserDao {
         return userAuthEntity;
     }
 
-    public void deleteUser(UserEntity userEntity,UserAuthEntity userAuthEntity){
+    public void deleteUser(UserEntity userEntity, UserAuthEntity userAuthEntity) {
         entityManager.remove(userEntity);
         entityManager.remove(userAuthEntity);
     }
@@ -76,4 +77,14 @@ public class UserDao {
         entityManager.merge(updatedUserEntity);
     }
 
+    //Function to delete the user by Admin
+    public UserEntity deleteUserbyAdmin(UserEntity userentity) {
+        entityManager.remove(userentity);
+        return userentity;
+    }
+
+
 }
+
+
+

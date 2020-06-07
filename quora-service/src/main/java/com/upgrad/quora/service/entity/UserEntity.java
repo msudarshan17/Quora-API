@@ -1,8 +1,6 @@
 package com.upgrad.quora.service.entity;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.builder.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -49,6 +47,7 @@ public class UserEntity implements Serializable {
     @Size(max = 200)
     private String emailAddress;
 
+    @ToStringExclude
     @Column(name = "PASSWORD")
     private String password;
 
@@ -67,7 +66,7 @@ public class UserEntity implements Serializable {
     @Column(name = "SALT")
     @NotNull
     @Size(max = 200)
-    //@ToStringExclude
+    @ToStringExclude
     private String salt;
 
     @Column(name = "ROLE")
@@ -76,6 +75,7 @@ public class UserEntity implements Serializable {
     public String getRole() {
         return role;
     }
+
     public void setRole(String role) {
         this.role = role;
     }
@@ -83,6 +83,7 @@ public class UserEntity implements Serializable {
     public String getSalt() {
         return salt;
     }
+
     public void setSalt(String salt) {
         this.salt = salt;
     }
@@ -176,6 +177,11 @@ public class UserEntity implements Serializable {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return new EqualsBuilder().append(this, obj).isEquals();
+    }
+
+    @Override
     public int hashCode() {
         return new HashCodeBuilder().append(this).hashCode();
     }
@@ -184,7 +190,6 @@ public class UserEntity implements Serializable {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
-
 
 
 }

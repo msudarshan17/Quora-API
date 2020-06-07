@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 
-
 import java.util.UUID;
 import java.util.Base64;
 
@@ -33,9 +32,9 @@ public class UserController {
     @Autowired
     private AuthenticationService authenticationService;
 
-//Here is a Signup method where user will signup by giving below details such as name / email / pwd etc and details will store in a Db
+    //Here is a Signup method where user will signup by giving below details such as name / email / pwd etc and details will store in a Db
     @RequestMapping(method = RequestMethod.POST, path = "/users/signup", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> signup(final SignupUserRequest signupUserRequest)  {
+    public ResponseEntity<?> signup(final SignupUserRequest signupUserRequest) {
         final UserEntity userEntity = new UserEntity();
         userEntity.setUuid(UUID.randomUUID().toString());
         userEntity.setFirstName(signupUserRequest.getFirstName());
@@ -53,7 +52,7 @@ public class UserController {
             final UserEntity createdUserEntity = userBusinessService.createUser(userEntity);
             SignupUserResponse userResponse = new SignupUserResponse().id(createdUserEntity.getUuid()).status("USER SUCCESSFULLY REGISTERED");
             return new ResponseEntity<SignupUserResponse>(userResponse, HttpStatus.CREATED);
-        }catch(SignUpRestrictedException signupRE){
+        } catch (SignUpRestrictedException signupRE) {
             ErrorResponse errorResponse = new ErrorResponse().message(signupRE.getErrorMessage()).code(signupRE.getCode()).rootCause(signupRE.getMessage());
             return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.CONFLICT);
 
@@ -61,15 +60,15 @@ public class UserController {
     }
 
     ////Here is a Signin method where user will signin by giving below details such as name /  pwd .
-    @RequestMapping(method = RequestMethod.POST, path = "/users/signin" , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> signin(@RequestHeader("authorization") final String authorization ) throws AuthenticationFailedException {
+    @RequestMapping(method = RequestMethod.POST, path = "/users/signin", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> signin(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
         byte[] decode = Base64.getDecoder().decode(authorization.split("Basic ")[1]);
         String decodedText = new String(decode);
         String[] decodedArray = decodedText.split(":");
         UserAuthEntity userAuthToken;
         try {
             userAuthToken = authenticationService.authenticate(decodedArray[0], decodedArray[1]);
-        }catch(AuthenticationFailedException afe){
+        } catch (AuthenticationFailedException afe) {
             ErrorResponse errorResponse = new ErrorResponse().message(afe.getErrorMessage()).code(afe.getCode()).rootCause(afe.getMessage());
             return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
         }
@@ -83,12 +82,12 @@ public class UserController {
 
     ////Here is a Signout method user will be signout after login.
     @RequestMapping(method = RequestMethod.POST, path = "/users/signout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> signout(@RequestHeader("authorization") final String accesToken ) throws SignOutRestrictedException {
+    public ResponseEntity<?> signout(@RequestHeader("authorization") final String accesToken) throws SignOutRestrictedException {
         UserAuthEntity userAuthToken;
         try {
             userAuthToken = userBusinessService.signout(accesToken);
             UserEntity user = userAuthToken.getUser();
-        }catch(SignOutRestrictedException signOutRE){
+        } catch (SignOutRestrictedException signOutRE) {
             ErrorResponse errorResponse = new ErrorResponse().message(signOutRE.getErrorMessage()).code(signOutRE.getCode()).rootCause(signOutRE.getMessage());
             return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.UNAUTHORIZED);
         }

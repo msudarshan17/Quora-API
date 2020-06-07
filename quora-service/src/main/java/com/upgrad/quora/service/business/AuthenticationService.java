@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import com.upgrad.quora.service.dao.UserDao;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.ZonedDateTime;
 
 @Service
@@ -23,7 +24,7 @@ public class AuthenticationService {
     public UserAuthEntity authenticate(final String username, final String password) throws AuthenticationFailedException {
         UserEntity userEntity = userDao.getUserByUserName(username);
         if (userEntity == null) {
-             throw new AuthenticationFailedException("ATH-001", "This username does not exist");
+            throw new AuthenticationFailedException("ATH-001", "This username does not exist");
         }
         final String encryptedPassword = CryptographyProvider.encrypt(password, userEntity.getSalt());
         if (encryptedPassword.equals(userEntity.getPassword())) {
