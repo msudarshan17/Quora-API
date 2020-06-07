@@ -12,7 +12,8 @@ public class AnswerDao {
 
     @PersistenceContext
     EntityManager entityManager;
-            //persistence entity for creating Answer
+
+    //persistence entity for creating Answer
     public Answer createAnswer(Answer answer) {
         entityManager.persist(answer);
         return answer;
@@ -29,13 +30,11 @@ public class AnswerDao {
             return null;
         }
     }
-
     //persistence entity to edit answer
     public Answer editAnswer(Answer answer) {
         entityManager.persist(answer);
         return answer;
     }
-
     //persistence entity to delete answer
     public void deleteAnswer(Answer answer) {
         entityManager.remove(answer);
@@ -51,6 +50,4 @@ public class AnswerDao {
             return null;
         }
     }
-
-
 }
