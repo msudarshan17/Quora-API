@@ -3,7 +3,7 @@ package com.upgrad.quora.service.business;
 import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
-import com.upgrad.quora.service.entity.UserAuthTokenEntity;
+import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,8 @@ public class GetAllQuestionsByUserBusinessService {
     private QuestionDao questionDao;
 
     /**
-     * @param  userId the first {@code String} to get all questions related to the user.
-     * @param  authorizationToken the second {@code String} to check if the access is available.
+     * @param userId             the first {@code String} to get all questions related to the user.
+     * @param authorizationToken the second {@code String} to check if the access is available.
      * @return List of QuestionEntity objects.
      */
     @Transactional(propagation = Propagation.REQUIRED)

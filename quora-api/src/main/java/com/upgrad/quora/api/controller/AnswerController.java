@@ -5,6 +5,7 @@ import com.upgrad.quora.service.business.AnswerBusinessService;
 import com.upgrad.quora.service.entity.Answer;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AnswerNotFoundException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
@@ -49,7 +50,7 @@ public class AnswerController {
         Answer answer = new Answer();
         answer.setAnswer(answerRequest.getAnswer());
         answer.setUuid(UUID.randomUUID().toString());
-        answer.setUser(UserAuthEntity.getUser());
+        answer.setUser(answer.getUser());
         ZonedDateTime now = ZonedDateTime.now();
         answer.setDate(now);
         //sends the answer object created in the database
@@ -124,7 +125,7 @@ public class AnswerController {
      */
     @RequestMapping(method = RequestMethod.GET, path = "/answer/all/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getAllAnswersToQuestion(@PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException, AnswerNotFoundException {
-      List<Answer> answerList = answerService.getAnswersForQuestion(questionId);
+        List<Answer> answerList = answerService.getAnswersForQuestion(questionId);
         StringBuilder contentBuilder = new StringBuilder();
         getContentsString(answerList, contentBuilder);
         StringBuilder uuIdBuilder = new StringBuilder();
@@ -144,7 +145,7 @@ public class AnswerController {
      * @param uuIdBuilder StringBuilder object
      *                    returns questionContent
      */
-    public static final String getUuIdStringAndQuestionContent(List<Answer> answerList, StringBuilder uuIdBuilder) {
+    public final String getUuIdStringAndQuestionContent(List<Answer> answerList, StringBuilder uuIdBuilder) {
         String questionContent = new String();
         for (Answer answerObject : answerList) {
             uuIdBuilder.append(answerObject.getUuid()).append(",");
@@ -159,7 +160,7 @@ public class AnswerController {
      * @param answerList list of questions
      * @param builder    StringBuilder with appended content list.
      */
-    public static final StringBuilder getContentsString(List<Answer> answerList, StringBuilder builder) {
+    public final StringBuilder getContentsString(List<Answer> answerList, StringBuilder builder) {
         for (Answer answerObject : answerList) {
             builder.append(answerObject.getAnswer()).append(",");
         }

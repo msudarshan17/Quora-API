@@ -4,7 +4,7 @@ import com.upgrad.quora.service.common.EndPointIdentifier;
 import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
-import com.upgrad.quora.service.entity.UserAuthTokenEntity;
+import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class GetAllQuestionsBusinessService implements EndPointIdentifier {
     private UserDao userDao;
 
     /**
-     * @param  accessToken the first {@code String} to check if the access is available.
+     * @param accessToken the first {@code String} to check if the access is available.
      * @return List of AnswerEntity objects.
      */
     public List<QuestionEntity> getAllQuestions(String accessToken) throws AuthorizationFailedException {

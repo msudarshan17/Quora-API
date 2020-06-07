@@ -19,8 +19,8 @@ public class CreateQuestionBusinessService {
     private UserDao userDao;
 
     /**
-     * @param  questionEntity the first {@code QuestionEntity} object to store question
-     * @param  authorizationToken the second {@code String} to check if the access is available.
+     * @param questionEntity     the first {@code QuestionEntity} object to store question
+     * @param authorizationToken the second {@code String} to check if the access is available.
      * @return QuestionEntity object is returned after persisting in the database.
      */
     @Transactional(propagation = Propagation.REQUIRED)

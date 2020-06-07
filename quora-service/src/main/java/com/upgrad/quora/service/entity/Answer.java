@@ -36,11 +36,8 @@ public class Answer {
     private String answer;
 
     @Column(name = "date")
-    private ZonedDateTime date;
-
-    @Column(name = "date")
     @NotNull
-    private ZonedDateTime createdDate;
+    private ZonedDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -50,7 +47,7 @@ public class Answer {
     @ManyToOne
     @JoinColumn(name = "question_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private TypePatternQuestions.Question question;
+    private QuestionEntity question;
 
     // Generated getter and setter methods for answer table
     public Integer getId() {
@@ -103,20 +100,13 @@ public class Answer {
     }
 
 
-    public TypePatternQuestions.Question getQuestion() {
+    public QuestionEntity getQuestion() {
         return question;
     }
 
 
-    public void setQuestion(TypePatternQuestions.Question question) {
+    public void setQuestion(QuestionEntity question) {
         this.question = question;
     }
 
-    public ZonedDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(ZonedDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
 }

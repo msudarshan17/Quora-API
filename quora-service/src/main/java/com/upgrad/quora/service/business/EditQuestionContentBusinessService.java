@@ -3,7 +3,7 @@ package com.upgrad.quora.service.business;
 import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
-import com.upgrad.quora.service.entity.UserAuthTokenEntity;
+import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
@@ -22,8 +22,8 @@ public class EditQuestionContentBusinessService {
     private QuestionDao questionDao;
 
     /**
-     * @param  questionEntity the first {@code QuestionEntity} object to update stored question.
-     * @param  authorizationToken the second {@code String} to check if the access is available.
+     * @param questionEntity     the first {@code QuestionEntity} object to update stored question.
+     * @param authorizationToken the second {@code String} to check if the access is available.
      * @return QuestionEntity object is returned after updating in the database.
      */
     @Transactional(propagation = Propagation.REQUIRED)
