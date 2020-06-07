@@ -5,7 +5,7 @@ import com.upgrad.quora.service.dao.QuestionDao;
 
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.dao.AnswerDao;
-import com.upgrad.quora.service.entity.questionEntity;
+import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.exception.AnswerNotFoundException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
@@ -52,11 +52,11 @@ public class AnswerBusinessService {
             throw new AuthorizationFailedException("ATHR-001","User has not signed in");
         }
         //if the access token is valid but the user has not logged in, AuthorizationFailedException is thrown
-        if(token.signOut()!= null){
+        if(token.getLogoutAt()!= null){
             throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to post an answer");
         }
         //else the user and the question of the answer is set and saved in the database
-        answer.setQuestion(question);
+   //     answer.setQuestion(Question);
         UserEntity user = token.getUser();
         answer.setUser(user);
         Answer answerId = answerDao.createAnswer(answer);
@@ -78,7 +78,7 @@ public class AnswerBusinessService {
 
     // Checks whether answer owner edits the answer and provides proper response to user
     @Transactional(propagation = Propagation.REQUIRED)
-    public static Answer isUserAnswerOwner(String answerUuId, UserAuthEntity authorizedUser, ActionType actionType) throws AnswerNotFoundException, AuthorizationFailedException {
+    public Answer isUserAnswerOwner(String answerUuId, UserAuthEntity authorizedUser, ActionType actionType) throws AnswerNotFoundException, AuthorizationFailedException {
         Answer answer = AnswerDao.getAnswerForUuId(answerUuId);
 
         if (answer == null) {
@@ -95,14 +95,14 @@ public class AnswerBusinessService {
 
     //An abstract interface for editing answer
     @Transactional(propagation = Propagation.REQUIRED)
-    public static Answer editAnswer(Answer answer) {
+    public Answer editAnswer(Answer answer) {
         return AnswerDao.editAnswer(answer);
     }
 
 
     //An abstract interface for deleting the answer
     @Transactional(propagation = Propagation.REQUIRED)
-    public static void deleteAnswer(Answer answer) {
+    public void deleteAnswer(Answer answer) {
         AnswerDao.deleteAnswer(answer);
     }
 
@@ -111,14 +111,14 @@ public class AnswerBusinessService {
     @Transactional(propagation = Propagation.REQUIRED)
     public List<Answer> getAnswersForQuestion(String questionUuId) throws AnswerNotFoundException, InvalidQuestionException {
 
-        TypePatternQuestions.Question question = questionDao.getQuestion(questionUuId);
+        QuestionEntity question = QuestionDao.getQuestionByQUuid(questionUuId);
 
         if (question == null) {
             throw new InvalidQuestionException("QUES-001", "The question with entered is invalid");
         }
 
         //throws an exception when there is no answer available for specific question uuid
-        List<Answer> answerList = answerDao.getAnswersForQuestion(questionUuId);
+        List<Answer> answerList = AnswerDao.getAnswersForQuestion(questionUuId);
         if (answerList == null) {
             throw new AnswerNotFoundException("OTHR-001", "No Answers available for the given question uuid");
         } else {

@@ -1,5 +1,6 @@
 package com.upgrad.quora.service.entity;
 
+import org.aspectj.weaver.patterns.TypePatternQuestions;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -37,6 +38,10 @@ public class Answer {
     @Column(name = "date")
     private ZonedDateTime date;
 
+    @Column(name = "date")
+    @NotNull
+    private ZonedDateTime createdDate;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -45,7 +50,7 @@ public class Answer {
     @ManyToOne
     @JoinColumn(name = "question_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Question question;
+    private TypePatternQuestions.Question question;
 
     // Generated getter and setter methods for answer table
     public Integer getId() {
@@ -98,12 +103,20 @@ public class Answer {
     }
 
 
-    public Question getQuestion() {
+    public TypePatternQuestions.Question getQuestion() {
         return question;
     }
 
 
-    public void setQuestion(Question question) {
+    public void setQuestion(TypePatternQuestions.Question question) {
         this.question = question;
+    }
+
+    public ZonedDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 }
