@@ -2,16 +2,21 @@ package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.*;
 import com.upgrad.quora.service.business.AnswerBusinessService;
-import com.upgrad.quora.service.business.AuthenticationService;
-import com.upgrad.quora.service.business.QuestionService;
+import com.upgrad.quora.service.business.AuthorizationService;
+import com.upgrad.quora.service.business.CreateQuestionBusinessService;
+import com.upgrad.quora.service.business.DeleteQuestionBusinessService;
+import com.upgrad.quora.service.business.EditQuestionContentBusinessService;
+import com.upgrad.quora.service.business.GetAllQuestionsBusinessService;
+import com.upgrad.quora.service.business.GetAllQuestionsByUserBusinessService;
 import com.upgrad.quora.service.business.SignupBusinessService;
 import com.upgrad.quora.service.entity.Answer;
-import com.upgrad.quora.service.entity.Question;
+import com.upgrad.quora.service.entity.QuestionEntity
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.exception.AnswerNotFoundException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 import com.upgrad.quora.service.type.ActionType;
+import org.aspectj.weaver.patterns.TypePatternQuestions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,11 +38,11 @@ public class AnswerController
 
     // Autowired authorization service from quora business service
     @Autowired
-    private AuthenticationService authorizationService;
+    private AuthorizationService authorizationService;
 
     // Autowired question service from quora business service
     @Autowired
-    QuestionService questionService;
+    EditQuestionContentBusinessService editQuestionContentBusinessService;
 
     // This controller method is called when the request pattern is of
     // type 'createAnswer' and incoming request is of POST Type
@@ -55,10 +60,6 @@ public class AnswerController
      */
     @RequestMapping(method = RequestMethod.POST, path = "/question/{questionId}/answer/create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public <AnswerRequest> ResponseEntity<?> createAnswer(final AnswerRequest answerRequest, @PathVariable("questionId") final String questionUuId, @RequestHeader final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
-        UserAuthEntity userAuthTokenEntity = authorizationService.isValidActiveAuthToken(authorization, ActionType.CREATE_ANSWER);
-        //Gets the question object from the database
-        Question question = questionService.getQuestionForUuId(questionUuId);
-        //Gets the answer object from the database
         Answer answer = new Answer();
         answer.setQuestion(question);
         answer.setAnswer(answerRequest.getAnswer());
@@ -89,10 +90,8 @@ public class AnswerController
      */
     @RequestMapping(method = RequestMethod.PUT, path = "/answer/edit/{answerId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> editAnswerContent(AnswerEditRequest answerEditRequest, @PathVariable("answerId") final String answerUuId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, AnswerNotFoundException {
-        //Authorize the user
-        UserAuthEntity userAuthTokenEntity = authorizationService.isValidActiveAuthToken(authorization, ActionType.EDIT_ANSWER);
-        //Who answer for the question whether the owner or not
-        Answer answer = AnswerBusinessService.isUserAnswerOwner(answerUuId, userAuthTokenEntity, ActionType.EDIT_ANSWER);
+
+        Answer answer = AnswerBusinessService.isUserAnswerOwner(answerUuId, userAuthEntity, ActionType.EDIT_ANSWER);
         // get the details that needs to be updated
         answer.setAnswer(answerEditRequest.getContent());
         answer.setDate(ZonedDateTime.now());
@@ -122,8 +121,7 @@ public class AnswerController
     @RequestMapping(method = RequestMethod.DELETE, path = "/answer/delete/{answerId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> deleteAnswer(@PathVariable("answerId") final String answerUuId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, AnswerNotFoundException {
 
-        UserAuthEntity userAuthTokenEntity = authorizationService.isValidActiveAuthToken(authorization, ActionType.DELETE_ANSWER);
-        Answer answer = AnswerBusinessService.isUserAnswerOwner(answerUuId, userAuthTokenEntity, ActionType.DELETE_ANSWER);
+        Answer answer = AnswerBusinessService.isUserAnswerOwner(answerUuId, userAuthEntity, ActionType.DELETE_ANSWER);
         // deletes the answer from the answer business logic service
         AnswerBusinessService.deleteAnswer(answer);
         // sends the response whether the answer is deleted along with HttpStatus
@@ -150,7 +148,7 @@ public class AnswerController
     @RequestMapping(method = RequestMethod.GET, path = "/answer/all/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> getAllAnswersToQuestion(@PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException, AnswerNotFoundException {
 
-        UserAuthTokenEntity userAuthTokenEntity = authorizationService.isValidActiveAuthToken(authorization, ActionType.GET_ALL_ANSWER_TO_QUESTION);
+        UserAuthEntity userAuthTokenEntity = authorizationService.isValidActiveAuthToken(authorization, ActionType.GET_ALL_ANSWER_TO_QUESTION);
         List<Answer> answerList = answerBusinessService.getAnswersForQuestion(questionId);
         StringBuilder contentBuilder = new StringBuilder();
         getContentsString(answerList, contentBuilder);

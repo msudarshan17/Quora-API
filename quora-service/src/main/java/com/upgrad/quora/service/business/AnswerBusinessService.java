@@ -34,10 +34,15 @@ public class AnswerBusinessService {
     AnswerDao answerDao;
 
     @Transactional(propagation = Propagation.REQUIRED)
+    public Answer createAnswer(Answer answer) {
+        return AnswerDao.createAnswer(answer);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
     public Answer create(Answer answer,String authorizationToken,String questionId) throws AuthorizationFailedException,
             InvalidQuestionException{
 
-        questionEntity question= questionDao.getQuestionById(questionId);
+        QuestionEntity question= questionDao.getQuestionById(questionId);
         if(question==null){
             throw new InvalidQuestionException("QUES-001","The question entered is invalid");
         }
@@ -65,7 +70,8 @@ public class AnswerBusinessService {
         Answer answer = answerDao.getAnswerForUuId(answerUuId);
         if (answer == null) {
             throw new AnswerNotFoundException("ANS-001", "Entered answer uuid does not exist");
-        } else {
+        }
+        else {
             return answer;
         }
     }
@@ -77,17 +83,12 @@ public class AnswerBusinessService {
 
         if (answer == null) {
             throw new AnswerNotFoundException("ANS-001", "Entered answer uuid does not exist");
-        } else if (!authorizedUser.getUser().getUuid().equals(answer.getUser().getUuid())) {
-            if (ActionType.EDIT_ANSWER.equals(actionType)) {
-                throw new AuthorizationFailedException("ATHR-003", "Only the answer owner can edit the answer");
-            } else {
-                throw new AuthorizationFailedException("ATHR-003", "Only the answer owner or admin can delete the answer");
-            }
-        } else if ((!authorizedUser.getUser().getRole().equals(RoleType.admin)
-                && !authorizedUser.getUser().getUuid().equals(answer.getUser().getUuid()))
-                && ActionType.DELETE_ANSWER.equals(actionType)) {
+
+        } else if (
+            ActionType.DELETE_ANSWER.equals(actionType)) {
             throw new AuthorizationFailedException("ATHR-003", "Only the answer owner or admin can delete the answer");
-        } else {
+        }
+          else {
             return answer;
         }
     }
@@ -98,10 +99,6 @@ public class AnswerBusinessService {
         return AnswerDao.editAnswer(answer);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
-    public static Answer createAnswer(Answer answer) {
-        return AnswerDao.createAnswer(answer);
-    }
 
     //An abstract interface for deleting the answer
     @Transactional(propagation = Propagation.REQUIRED)
